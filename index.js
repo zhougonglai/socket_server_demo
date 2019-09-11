@@ -11,18 +11,20 @@ app.use(bodyParser.json());
 
 const PORT = config.PORT || 3000;
 
-app.use(express.static(path.join(__dirname, '../dist')));
-
-io.attach(http);
+// io.attach(http);
 
 io.on("connection", socket => {
   console.log("a user connected");
-  socket.on("disconnect", function() {
+  socket.on("disconnect", () => {
     console.log("user disconnected");
   });
 
-  socket.on("chat message", function(msg) {
+  socket.on("chat message", (msg) => {
     console.log("message: ", msg);
+  });
+
+  socket.on('reply', () => {
+    console.log('reply')
   });
 });
 
