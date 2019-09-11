@@ -1,12 +1,19 @@
-const app = require("express")();
+const app = require("./src");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
+const path = require('path');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const config = require('./config');
 
-const PORT = process.env.PORT || 3000;
+app.use(cors())
+app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
-});
+const PORT = config.PORT || 3000;
+
+app.use(express.static(path.join(__dirname, '../dist')));
+
+io.attach(http);
 
 io.on("connection", socket => {
   console.log("a user connected");
@@ -15,7 +22,7 @@ io.on("connection", socket => {
   });
 
   socket.on("chat message", function(msg) {
-    console.log("message: " + msg);
+    console.log("message: ", msg);
   });
 });
 

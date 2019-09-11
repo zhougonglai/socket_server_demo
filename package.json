@@ -5,13 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
+    "serve": "parcel ./public/index.html",
     "log": "nodemon --inspect index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
+    "parcel-bundler": "^1.12.3",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {
