@@ -33,6 +33,10 @@ class App extends React.Component {
     console.log(this.room);
   }
 
+  inAuth = () => {
+    this.auth = this.socket.io.socket('/auth');
+  }
+
   render() {
     return (
       <div>
