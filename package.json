@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "serve": "parcel ./public/index.html",
-    "log": "nodemon --inspect index.js"
+    "serve": "parcel ./public/index.html"
   },
   "keywords": [],
   "author": "",

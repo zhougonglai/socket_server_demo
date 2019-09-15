@@ -7,8 +7,9 @@ const config = require('../config');
 
 class App extends React.Component {
   componentDidMount() {
-    const socket = io(config.ORIGIN);
+    this.socket = io(config.ORIGIN);
     this.video = React.createRef();
+    console.log(this.socket);
   }
 
   getUserMedia = () => {
@@ -16,9 +17,20 @@ class App extends React.Component {
       video: true,
       audio: true
     }).then(mediaSteam => {
-      console.log(mediaSteam, this.video.current);
-      this.video.current.srcObject = mediaSteam;
+      const localPeerConnection = new RTCPeerConnection();
+      if (this.video.current.srcObject) {
+        this.video.current.srcObject = mediaSteam;
+      } else {
+        this.video.current.src = URL.createObjectURL(mediaSteam);
+      }
+      localPeerConnection.addStream(mediaSteam);
+      console.log(mediaSteam, this.video.current, localPeerConnection);
     })
+  }
+
+  inRoom = () => {
+    this.room = this.socket.io.socket('/room');
+    console.log(this.room);
   }
 
   render() {
@@ -26,6 +38,7 @@ class App extends React.Component {
       <div>
         resume App
         <button onClick={this.getUserMedia}>get User Media</button>
+        <button onClick={this.inRoom}>in room</button>
         <video ref={this.video} autoPlay playsInline />
       </div>
     )

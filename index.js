@@ -11,20 +11,46 @@ app.use(bodyParser.json());
 
 const PORT = config.PORT || 3000;
 
-// io.attach(http);
+let userNum = 0;
+
+const authNSP = io.of('/auth').on('connection', require('./src/auth'));
+const roomNSP = io.of('/room').on('connection', require('./src/room'));
+
+
 
 io.on("connection", socket => {
   console.log("a user connected");
   socket.on("disconnect", () => {
+    --userNum;
     console.log("user disconnected");
+    socket.broadcast.emit('user left', {
+      username: socket.username,
+      userNum
+    })
   });
 
-  socket.on("chat message", (msg) => {
-    console.log("message: ", msg);
+  socket.on("chat message", ctx => {
+    console.log("message: ", ctx);
+    socket.broadcast.emit('chat message', {
+      username: socket.username,
+      message: ctx
+    })
   });
 
-  socket.on('reply', () => {
-    console.log('reply')
+  socket.on('add user', username => {
+    userNum++;
+    socket.emit('login', {
+      userNum
+    })
+
+    socket.broadcast.emit('user joined', {
+      username: socket.username,
+      userNum
+    })
+  })
+
+  socket.on('typing', () => {
+    console.log('typing')
   });
 });
 
